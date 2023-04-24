@@ -1,8 +1,6 @@
 package com.morev.movies.model;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
-import jakarta.websocket.server.ServerEndpoint;
+import com.morev.movies.dto.movie.MovieDTO;
 import lombok.*;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
@@ -19,9 +17,7 @@ import java.util.List;
 @Setter
 public class Movie {
     @Id
-//    @JsonSerialize(using= ToStringSerializer.class)
     private ObjectId id;
-    private String imdbId;
     private String title;
     private String releaseDate;
     private String trailerLink;
@@ -29,6 +25,16 @@ public class Movie {
     private List<String> genres;
     private List<String> backdrops;
     @DocumentReference
-    private List<Review> review_ids;
+    private List<Review> reviewIds;
 
+    public Movie(MovieDTO movieDTO) {
+        this.id = movieDTO.getId();
+        this.title = movieDTO.getTitle();
+        this.releaseDate = movieDTO.getReleaseDate();
+        this.trailerLink = movieDTO.getTrailerLink();
+        this.poster = movieDTO.getPoster();
+        this.genres = movieDTO.getGenres();
+        this.backdrops = movieDTO.getBackdrops();
+        this.reviewIds = movieDTO.getReviewIds();
+    }
 }

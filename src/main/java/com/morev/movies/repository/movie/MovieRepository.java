@@ -1,4 +1,4 @@
-package com.morev.movies.repository;
+package com.morev.movies.repository.movie;
 
 import com.morev.movies.model.Movie;
 import org.bson.types.ObjectId;

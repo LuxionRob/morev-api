@@ -1,12 +1,16 @@
 package com.morev.movies.service.movie;
 
-import com.morev.movies.model.Movie;
+import com.morev.movies.dto.movie.MovieDTO;
 import org.bson.types.ObjectId;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface MovieService {
-    public List<Movie> findAll();
-    public Optional<Movie> findById(ObjectId id);
+    List<MovieDTO> findAll();
+    Optional<MovieDTO> findById(ObjectId id);
+    MovieDTO create(MovieDTO movieDto);
+    boolean delete(ObjectId id);
+
+    MovieDTO update(ObjectId id, MovieDTO movieDto);
 }
