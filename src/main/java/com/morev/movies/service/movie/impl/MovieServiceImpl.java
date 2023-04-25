@@ -60,8 +60,8 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public MovieDTO update(ObjectId id, MovieDTO movieDto) {
-        Optional<Movie> optionalMovie = movieRepository.findById(id);
+    public MovieDTO update(MovieDTO movieDto) {
+        Optional<Movie> optionalMovie = movieRepository.findById(movieDto.getId());
 
         if (optionalMovie.isPresent()) {
             Movie movie = optionalMovie.get();

@@ -11,6 +11,5 @@ public interface MovieService {
     Optional<MovieDTO> findById(ObjectId id);
     MovieDTO create(MovieDTO movieDto);
     boolean delete(ObjectId id);
-
-    MovieDTO update(ObjectId id, MovieDTO movieDto);
+    MovieDTO update(MovieDTO movieDto);
 }
