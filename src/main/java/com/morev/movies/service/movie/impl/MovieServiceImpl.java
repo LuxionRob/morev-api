@@ -43,13 +43,8 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public MovieDTO create(@RequestBody MovieDTO movieDto) {
-        boolean exists = movieRepository.existsById(movieDto.getId());
-        if (exists) {
-            ObjectId newId = new ObjectId();
-            movieDto.setId(newId);
-        }
+        movieDto.setId(new ObjectId());
         Movie newMovie = new Movie(movieDto);
-        System.out.println(newMovie);
         return new MovieDTO(movieRepository.save(newMovie));
     }
 
