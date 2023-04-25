@@ -38,9 +38,9 @@ public class MovieController {
         return ResponseEntity.status(HttpStatus.CREATED).body(newMovie);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<MovieDTO> update(@PathVariable ObjectId id, @RequestBody MovieDTO movieDto) {
-        MovieDTO updatedMovie = movieService.update(id, movieDto);
+    @PutMapping
+    public ResponseEntity<MovieDTO> update(@RequestBody MovieDTO movieDto) {
+        MovieDTO updatedMovie = movieService.update(movieDto);
         if (updatedMovie != null) {
             return ResponseEntity.ok(updatedMovie);
         } else {

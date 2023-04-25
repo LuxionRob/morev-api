@@ -1,6 +1,10 @@
 package com.morev.movies.model;
 
 import com.morev.movies.dto.movie.MovieDTO;
+import com.morev.movies.utils.CRUD.OnCreate;
+import com.morev.movies.utils.CRUD.OnUpdate;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Null;
 import lombok.*;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
@@ -17,6 +21,8 @@ import java.util.List;
 @Setter
 public class Movie {
     @Id
+    @NotNull(groups = {OnUpdate.class})
+    @Null(groups = {OnCreate.class})
     private ObjectId id;
     private String title;
     private String releaseDate;
