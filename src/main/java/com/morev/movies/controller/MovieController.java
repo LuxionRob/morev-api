@@ -1,7 +1,7 @@
 package com.morev.movies.controller;
 
 import com.morev.movies.dto.movie.MovieDTO;
-import com.morev.movies.service.movie.impl.MovieServiceImpl;
+import com.morev.movies.service.movie.MovieService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,10 +15,10 @@ import java.util.Optional;
 @RequestMapping("/api/v1/movies")
 public class MovieController {
 
-    private final MovieServiceImpl movieService;
+    private final MovieService movieService;
 
     @Autowired
-    public MovieController(MovieServiceImpl movieService) {
+    public MovieController(MovieService movieService) {
         this.movieService = movieService;
     }
 

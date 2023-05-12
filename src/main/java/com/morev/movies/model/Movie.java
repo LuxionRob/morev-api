@@ -1,10 +1,7 @@
 package com.morev.movies.model;
 
 import com.morev.movies.dto.movie.MovieDTO;
-import com.morev.movies.utils.CRUD.OnCreate;
-import com.morev.movies.utils.CRUD.OnUpdate;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Null;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
@@ -21,13 +18,15 @@ import java.util.List;
 @Setter
 public class Movie {
     @Id
-    @NotNull(groups = {OnUpdate.class})
-    @Null(groups = {OnCreate.class})
     private ObjectId id;
+    @NotBlank(message = "Title is required")
     private String title;
+    @NotBlank(message = "Release date is required")
     private String releaseDate;
     private String trailerLink;
+    @NotBlank(message = "Poster is required")
     private String poster;
+    @NotBlank(message = "Genre is required")
     private List<String> genres;
     private List<String> backdrops;
     @DocumentReference
