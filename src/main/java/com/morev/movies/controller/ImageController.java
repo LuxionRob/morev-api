@@ -1,7 +1,7 @@
 package com.morev.movies.controller;
 
 import com.morev.movies.dto.image.ImageDTO;
-import com.morev.movies.service.image.impl.ImageServiceImpl;
+import com.morev.movies.service.image.ImageService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,21 +11,22 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/images")
 public class ImageController {
 
-    private final ImageServiceImpl imageService;
+    private final ImageService imageService;
 
     @Autowired
-    public ImageController(ImageServiceImpl imageService) {
+    public ImageController(ImageService imageService) {
         this.imageService = imageService;
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file) throws IOException {
+    public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file) throws IOException, SQLException {
         return ResponseEntity.ok().body(imageService.uploadImage(file));
     }
 

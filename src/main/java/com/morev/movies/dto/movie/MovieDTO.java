@@ -22,13 +22,11 @@ public class MovieDTO {
     private String title;
     @NotBlank
     private String releaseDate;
-    @NotBlank
     private String trailerLink;
     @NotBlank
     private String poster;
     @NotBlank
     private List<String> genres;
-    @NotBlank
     private List<String> backdrops;
     private List<Review> reviewIds;
     public MovieDTO(Movie movie) {
