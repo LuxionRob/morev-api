@@ -35,9 +35,9 @@ public class Seeder implements CommandLineRunner {
 
     private void seedUsers() {
         if (userRepository.count() == 0) {
-            User user1 = new User("user1", new BCryptPasswordEncoder().encode("password1"), Role.USER);
-            User user2 = new User("user2", new BCryptPasswordEncoder().encode("password2"), Role.USER);
-            User admin = new User("admin", new BCryptPasswordEncoder().encode("password3"), Role.ADMIN);
+            User user1 = new User("user1", new BCryptPasswordEncoder().encode("Password123@"), Role.USER);
+            User user2 = new User("user2", new BCryptPasswordEncoder().encode("Password123@"), Role.USER);
+            User admin = new User("admin", new BCryptPasswordEncoder().encode("Password123@"), Role.ADMIN);
 
             userRepository.saveAll(Arrays.asList(user1, user2, admin));
         }
