@@ -1,5 +1,6 @@
 package com.morev.movies.dto.auth;
 
+import com.morev.movies.validation.password.ValidPassword;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -13,5 +14,6 @@ public class AuthenticationRequest {
     @NotBlank(message = "Email cannot be blank.")
     @Email(message = "Input must be a valid email address.")
     private String email;
+    @ValidPassword
     private String password;
 }
