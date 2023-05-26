@@ -7,13 +7,10 @@ import org.springframework.stereotype.Component;
 @Component
 public interface UserService {
     boolean isExisted(ObjectId id);
+    UserDTO getUserByEmail(String email);
 
-    UserDTO create(UserDTO userDTO);
+    void updateUser(String email, UserDTO userDto);
 
-    Object getUserById(ObjectId id);
-
-    void updateUser(ObjectId id, UserDTO userDto);
-
-    void deleteUser(ObjectId id);
+    void deleteUser(String email);
 
 }

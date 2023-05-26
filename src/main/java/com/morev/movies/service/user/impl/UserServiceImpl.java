@@ -23,32 +23,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO create(UserDTO userDTO) {
-        if (isExisted(userDTO.getId())) {
-            return null;
-        }
-        User user = new User(userDTO);
-        userRepository.save(user);
-        return userDTO;
+    public UserDTO getUserByEmail(String email) {
+        Optional<User> user = userRepository.findByEmail(email);
+        return user.map(UserDTO::new).orElse(null);
     }
 
     @Override
-    public Object getUserById(ObjectId id) {
-        Optional<User> user = userRepository.findById(id);
-        if (user.isPresent()) {
-            return new UserDTO(user.get());
-        }
-
-        return Optional.empty();
-    }
-
-    @Override
-    public void updateUser(ObjectId id, UserDTO userDto) {
+    public void updateUser(String email, UserDTO userDto) {
 
     }
 
     @Override
-    public void deleteUser(ObjectId id) {
-
+    public void deleteUser(String email) {
+        Optional<User> user = userRepository.findByEmail(email);
+        user.ifPresent(userRepository::delete);
     }
 }
