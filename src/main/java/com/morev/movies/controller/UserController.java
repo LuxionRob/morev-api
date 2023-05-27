@@ -4,9 +4,11 @@ import com.morev.movies.dto.user.UserDTO;
 import com.morev.movies.service.user.UserService;
 import com.morev.movies.utils.requestInstance.OnUpdate;
 import jakarta.validation.Valid;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,21 +23,27 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getUserById(@PathVariable ObjectId id) {
-        return ResponseEntity.ok(userService.getUserById(id));
+    @GetMapping()
+    public ResponseEntity<?> getUserById() {
+        Authentication user = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails principal = (UserDetails) user.getPrincipal();
+        return ResponseEntity.ok(userService.getUserByEmail(principal.getUsername()));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping()
     @Validated(OnUpdate.class)
-    public ResponseEntity<?> updateUser(@PathVariable ObjectId id, @RequestBody @Valid UserDTO userDto) {
-        userService.updateUser(id, userDto);
+    public ResponseEntity<?> updateUser(@RequestBody @Valid UserDTO userDto) {
+        Authentication user = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails principal = (UserDetails) user.getPrincipal();
+        userService.updateUser(principal.getUsername(), userDto);
         return ResponseEntity.ok("User updated successfully");
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable ObjectId id) {
-        userService.deleteUser(id);
+    @DeleteMapping()
+    public ResponseEntity<?> deleteUser() {
+        Authentication user = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails principal = (UserDetails) user.getPrincipal();
+        userService.deleteUser(principal.getUsername());
         return ResponseEntity.ok("User deleted successfully");
     }
 }
