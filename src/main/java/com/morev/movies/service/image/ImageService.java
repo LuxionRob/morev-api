@@ -14,4 +14,6 @@ public interface ImageService {
     byte[] display(ObjectId id);
 
     List<ImageDTO> getAll();
+
+    void deleteImage(ObjectId id);
 }

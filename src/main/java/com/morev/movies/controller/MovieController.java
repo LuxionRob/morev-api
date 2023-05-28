@@ -31,30 +31,4 @@ public class MovieController {
     public ResponseEntity<Optional<MovieDTO>> findMovieById(@PathVariable ObjectId id) {
         return new ResponseEntity<>(movieService.findById(id), HttpStatus.OK);
     }
-
-    @PostMapping
-    public ResponseEntity<MovieDTO> create(@RequestBody MovieDTO movieDto) {
-        MovieDTO newMovie = movieService.create(movieDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(newMovie);
-    }
-
-    @PutMapping
-    public ResponseEntity<MovieDTO> update(@RequestBody MovieDTO movieDto) {
-        MovieDTO updatedMovie = movieService.update(movieDto);
-        if (updatedMovie != null) {
-            return ResponseEntity.ok(updatedMovie);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<MovieDTO> delete(@PathVariable("id") ObjectId id) {
-        boolean isSuccess = movieService.delete(id);
-        if (isSuccess) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
 }

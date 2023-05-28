@@ -23,6 +23,14 @@ public enum Role {
                     ADMIN_DELETE,
                     ADMIN_CREATE
             )
+    ),
+    REVIEWER(
+            Set.of(
+                    REVIEWER_READ,
+                    REVIEWER_CREATE,
+                    REVIEWER_DELETE,
+                    REVIEWER_UPDATE
+            )
     );
 
     @Getter
