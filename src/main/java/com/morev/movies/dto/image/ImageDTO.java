@@ -20,6 +20,7 @@ public class ImageDTO {
     private String title;
 
     private String url;
+
     public ImageDTO(Image image) {
         this.id = image.getId();
         this.title = image.getTitle();

@@ -42,6 +42,11 @@ public class ImageServiceImpl implements ImageService {
         return result;
     }
 
+    @Override
+    public void deleteImage(ObjectId id) {
+        imageRepository.deleteById(id);
+    }
+
     public ImageServiceImpl(ImageRepository imageRepository) {
         this.imageRepository = imageRepository;
     }

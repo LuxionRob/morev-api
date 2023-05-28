@@ -39,6 +39,13 @@ public class User implements UserDetails {
         this.avatarUrl = dto.getAvatarUrl();
     }
 
+    public void updateUserByDTO(UserDTO dto) {
+        this.displayName = dto.getDisplayName();
+        this.fullName = dto.getFullName();
+        this.age = dto.getAge();
+        this.avatarUrl = dto.getAvatarUrl();
+    }
+
     public User(String email, String password, Role role) {
         this.email = email;
         this.password = password;

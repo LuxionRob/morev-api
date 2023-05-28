@@ -31,7 +31,6 @@ public class AuthenticationController {
             @RequestBody @Valid AuthenticationRequest request
     ) throws Exception {
         return authenticationService.authenticate(request);
-
     }
 
     @PostMapping("/change-password")
