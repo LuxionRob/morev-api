@@ -5,18 +5,20 @@ import com.morev.movies.dto.auth.RegisterRequest;
 import com.morev.movies.dto.auth.AuthenticationRequest;
 import com.morev.movies.dto.auth.ChangePasswordRequest;
 import com.morev.movies.service.auth.AuthenticationService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/auth")
 public class AuthenticationController {
-
     private final AuthenticationService authenticationService;
-
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.OK)
     public AuthenticationResponse register(
@@ -42,4 +44,11 @@ public class AuthenticationController {
 
     }
 
+    @PostMapping("/refresh-token")
+    public void refreshToken(
+            HttpServletRequest request,
+            HttpServletResponse response
+    ) throws IOException {
+        authenticationService.refreshToken(request, response);
+    }
 }
