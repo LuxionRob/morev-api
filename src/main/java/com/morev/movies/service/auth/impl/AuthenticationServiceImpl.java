@@ -13,11 +13,15 @@ import com.morev.movies.repository.token.TokenRepository;
 import com.morev.movies.repository.user.UserRepository;
 import com.morev.movies.service.auth.AuthenticationService;
 import com.morev.movies.utils.security.JwtTokenUtils;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -26,7 +30,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
@@ -37,6 +43,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     private final TokenRepository tokenRepository;
     private final AuthenticationManager authenticationManager;
+    private final JavaMailSender mailSender;
 
     @Override
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
@@ -73,20 +80,25 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Account is not existed!");
     }
 
-    public AuthenticationResponse register(RegisterRequest request) {
+    public AuthenticationResponse register(RegisterRequest request) throws MessagingException, UnsupportedEncodingException {
         Optional<User> user = userRepository.findByEmail(request.getEmail());
         if (user.isPresent()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Account is existed!");
         } else {
+            String randomCode = this.randomString();
             var newUser = User.builder()
                     .email(request.getEmail())
                     .password(passwordEncoder.encode(request.getPassword()))
+                    .fullName(request.getFullName())
                     .role(Role.USER)
+                    .enabled(false)
+                    .verificationCode(randomCode)
                     .build();
             var savedUser = userRepository.save(newUser);
             var jwtToken = jwtTokenUtils.generateToken(newUser);
             var refreshToken = jwtTokenUtils.generateRefreshToken(newUser);
             saveUserToken(savedUser, jwtToken);
+            sendVerificationEmail(newUser);
             return AuthenticationResponse.builder()
                     .accessToken(jwtToken)
                     .refreshToken(refreshToken)
@@ -141,6 +153,68 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                         .build();
                 new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
             }
+        }
+    }
+
+    private String randomString() {
+        int leftLimit = 48;
+        int rightLimit = 122;
+        int targetStringLength = 64;
+        Random random = new Random();
+
+        String generatedString = random.ints(leftLimit, rightLimit + 1)
+                .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
+                .limit(targetStringLength)
+                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                .toString();
+
+        return generatedString;
+    }
+
+
+    @Override
+    public void sendVerificationEmail(User user) throws MessagingException, UnsupportedEncodingException {
+        String siteURL = "http://localhost:8080";
+        String toAddress = user.getEmail();
+        String fromAddress = "aidaynhi8@gmail.com";
+        String senderName = "Morev Support";
+        String subject = "Please verify your registration";
+        String content = "Dear [[name]],<br>"
+                + "Please click the link below to verify your registration:<br>"
+                + "<h3><a href=\"[[URL]]\" target=\"_self\">VERIFY</a></h3>"
+                + "Thank you,<br>"
+                + "Your company name.";
+
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message);
+
+        helper.setFrom(fromAddress, senderName);
+        helper.setTo(toAddress);
+        helper.setSubject(subject);
+
+        content = content.replace("[[name]]", user.getFullName());
+        String verifyURL = siteURL + "/verify?code=" + user.getVerificationCode();
+
+        content = content.replace("[[URL]]", verifyURL);
+        System.out.println("Sending");
+        helper.setText(content, true);
+
+        mailSender.send(message);
+
+    }
+
+    @Override
+    public boolean verify(String verificationCode) {
+        Optional<User> user = userRepository.findByVerificationCode(verificationCode);
+
+        if (user.isEmpty() || user.get().isEnabled()) {
+            return false;
+        } else {
+            user.get().setVerificationCode(null);
+            user.get().setEnabled(true);
+            userRepository.save(user.get());
+
+            return true;
         }
     }
 }
