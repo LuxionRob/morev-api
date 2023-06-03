@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,5 +51,14 @@ public class AuthenticationController {
             HttpServletResponse response
     ) throws IOException {
         authenticationService.refreshToken(request, response);
+    }
+
+    @GetMapping("/verify")
+    public String verifyUser(@Param("code") String code) {
+        if (authenticationService.verify(code)) {
+            return "verify_success";
+        } else {
+            return "verify_fail";
+        }
     }
 }

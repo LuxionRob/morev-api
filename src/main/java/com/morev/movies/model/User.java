@@ -4,6 +4,7 @@ import com.morev.movies.dto.user.UserDTO;
 import com.morev.movies.enumeration.Role;
 import com.morev.movies.validation.password.ValidPassword;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
@@ -30,6 +31,9 @@ public class User implements UserDetails {
     @ValidPassword
     private String password;
     private Role role;
+    private String verificationCode;
+    @NotBlank(message = "Account must be enabled or not")
+    private boolean enabled;
 
     public User(UserDTO dto) {
         this.id = dto.getId();
@@ -79,6 +83,6 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return enabled;
     }
 }
