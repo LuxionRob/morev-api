@@ -10,9 +10,6 @@ import org.bson.types.ObjectId;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -75,9 +72,7 @@ public class AdminController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public ResponseEntity<?> updateUser(@RequestBody @Valid UserDTO userDto) {
-        Authentication user = SecurityContextHolder.getContext().getAuthentication();
-        UserDetails principal = (UserDetails) user.getPrincipal();
-        userService.updateUser(principal.getUsername(), userDto);
+        userService.updateUser(userDto.getEmail(), userDto);
         return ResponseEntity.ok("User updated successfully");
     }
 

@@ -1,9 +1,7 @@
 package com.morev.movies.service.auth;
 
-import com.morev.movies.dto.auth.AuthenticationResponse;
-import com.morev.movies.dto.auth.RegisterRequest;
-import com.morev.movies.dto.auth.AuthenticationRequest;
-import com.morev.movies.dto.auth.ChangePasswordRequest;
+import com.morev.movies.dto.auth.*;
+import com.morev.movies.exception.AccountNotFoundException;
 import com.morev.movies.model.User;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,7 +19,11 @@ public interface AuthenticationService {
 
     void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException;
 
+    boolean verify(String verificationCode);
+
+    boolean resetPassword(String code, ResetPasswordRequest request);
+
     void sendVerificationEmail(User user) throws MessagingException, UnsupportedEncodingException;
 
-    boolean verify(String verificationCode);
+    void sendForgotPasswordEmail(String email) throws MessagingException, UnsupportedEncodingException, AccountNotFoundException;
 }

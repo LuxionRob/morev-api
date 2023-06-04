@@ -1,10 +1,9 @@
 package com.morev.movies.controller;
 
-import com.morev.movies.dto.auth.AuthenticationResponse;
-import com.morev.movies.dto.auth.RegisterRequest;
-import com.morev.movies.dto.auth.AuthenticationRequest;
-import com.morev.movies.dto.auth.ChangePasswordRequest;
+import com.morev.movies.dto.auth.*;
+import com.morev.movies.exception.AccountNotFoundException;
 import com.morev.movies.service.auth.AuthenticationService;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -14,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 @RestController
 @RequiredArgsConstructor
@@ -46,6 +46,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/refresh-token")
+    @ResponseStatus(HttpStatus.OK)
     public void refreshToken(
             HttpServletRequest request,
             HttpServletResponse response
@@ -54,11 +55,30 @@ public class AuthenticationController {
     }
 
     @GetMapping("/verify")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
     public String verifyUser(@Param("code") String code) {
         if (authenticationService.verify(code)) {
             return "verify_success";
         } else {
             return "verify_fail";
+        }
+    }
+    @GetMapping("/reset-password")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public String sendForgot(@Param("email") String email) throws MessagingException, UnsupportedEncodingException, AccountNotFoundException {
+        authenticationService.sendForgotPasswordEmail(email);
+        return "email_has_sent";
+    }
+    @PostMapping("/reset-password")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public String resetPassword(@Param("code") String code, @RequestBody @Valid ResetPasswordRequest request) {
+        if (authenticationService.resetPassword(code, request)) {
+            return "reset_success";
+        } else {
+            return "reset_fail";
         }
     }
 }

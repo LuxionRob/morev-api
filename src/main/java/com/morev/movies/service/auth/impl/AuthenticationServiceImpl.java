@@ -1,23 +1,23 @@
 package com.morev.movies.service.auth.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.morev.movies.dto.auth.RegisterRequest;
-import com.morev.movies.dto.auth.AuthenticationResponse;
+import com.morev.movies.dto.auth.*;
 import com.morev.movies.enumeration.Role;
 import com.morev.movies.enumeration.TokenType;
+import com.morev.movies.exception.AccountNotFoundException;
 import com.morev.movies.model.User;
 import com.morev.movies.model.Token;
-import com.morev.movies.dto.auth.AuthenticationRequest;
-import com.morev.movies.dto.auth.ChangePasswordRequest;
 import com.morev.movies.repository.token.TokenRepository;
 import com.morev.movies.repository.user.UserRepository;
 import com.morev.movies.service.auth.AuthenticationService;
 import com.morev.movies.utils.security.JwtTokenUtils;
+import com.sun.jdi.request.InvalidRequestStateException;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -44,6 +44,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final TokenRepository tokenRepository;
     private final AuthenticationManager authenticationManager;
     private final JavaMailSender mailSender;
+    @Value("${CLIENT_DOMAIN}")
+    private String domain;
+    @Value("${CLIENT_PORT}")
+    private String port;
+    @Value("${API_VERSION}")
+    private String apiVersion;
 
     @Override
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
@@ -174,7 +180,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public void sendVerificationEmail(User user) throws MessagingException, UnsupportedEncodingException {
-        String siteURL = "http://localhost:8080";
+        String siteURL = "http://" + domain + ":" + port + "/api/" + apiVersion + "/auth";
         String toAddress = user.getEmail();
         String fromAddress = "aidaynhi8@gmail.com";
         String senderName = "Morev Support";
@@ -200,7 +206,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         helper.setText(content, true);
 
         mailSender.send(message);
-
     }
 
     @Override
@@ -216,5 +221,60 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
             return true;
         }
+    }
+
+    @Override
+    public boolean resetPassword(String code, ResetPasswordRequest request) {
+        Optional<User> user = userRepository.findByForgotPasswordCode(code);
+        if (user.isPresent()) {
+            if (request.isMatches()) {
+                user.get().setPassword(passwordEncoder.encode(request.getPassword()));
+                user.get().setForgotPasswordCode(null);
+                userRepository.save(user.get());
+                return true;
+            } else {
+                throw new InvalidRequestStateException("Password must be match");
+            }
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public void sendForgotPasswordEmail(String email) throws MessagingException, UnsupportedEncodingException, AccountNotFoundException {
+        Optional<User> user = userRepository.findByEmail(email);
+        if (user.isEmpty()) {
+            throw new AccountNotFoundException("Account not found");
+        }
+        String code = randomString();
+        user.get().setForgotPasswordCode(code);
+        userRepository.save(user.get());
+
+        String siteURL = "http://" + domain + ":" + port + "/api/" + apiVersion + "/auth";
+        String toAddress = email;
+        String fromAddress = "aidaynhi8@gmail.com";
+        String senderName = "Morev Support";
+        String subject = "Your Morev Account: Forgot password";
+        String content = "Dear [[name]],<br>"
+                + "You have requested to reset your password.<br>"
+                + "Click the link below to change your password:<br>"
+                + "<h3><a href=\"[[URL]]\" target=\"_self\">VERIFY</a></h3>"
+                + "Thank you,<br>"
+                + "Company ThieuNang.";
+
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message);
+
+        helper.setFrom(fromAddress, senderName);
+        helper.setTo(toAddress);
+        helper.setSubject(subject);
+
+        content = content.replace("[[name]]", user.get().getFullName());
+        String verifyURL = siteURL + "/reset-password?code=" + code;
+
+        content = content.replace("[[URL]]", verifyURL);
+        helper.setText(content, true);
+
+        mailSender.send(message);
     }
 }
