@@ -32,6 +32,7 @@ public class User implements UserDetails {
     private String password;
     private Role role;
     private String verificationCode;
+    private String forgotPasswordCode;
     @NotBlank(message = "Account must be enabled or not")
     private boolean enabled;
 
@@ -50,10 +51,12 @@ public class User implements UserDetails {
         this.avatarUrl = dto.getAvatarUrl();
     }
 
-    public User(String email, String password, Role role) {
+    public User(String fullName, String email, String password, Role role) {
+        this.fullName = fullName;
         this.email = email;
         this.password = password;
         this.role = role;
+        this.enabled = true;
     }
 
     @Override

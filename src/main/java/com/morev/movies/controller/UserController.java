@@ -24,7 +24,7 @@ public class UserController {
     }
 
     @GetMapping()
-    public ResponseEntity<?> getUserById() {
+    public ResponseEntity<?> getUser() {
         Authentication user = SecurityContextHolder.getContext().getAuthentication();
         UserDetails principal = (UserDetails) user.getPrincipal();
         return ResponseEntity.ok(userService.getUserByEmail(principal.getUsername()));
