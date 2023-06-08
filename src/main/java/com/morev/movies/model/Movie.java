@@ -3,7 +3,6 @@ package com.morev.movies.model;
 import com.morev.movies.dto.movie.MovieDTO;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
-import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
@@ -18,7 +17,7 @@ import java.util.List;
 @Setter
 public class Movie {
     @Id
-    private ObjectId id;
+    private String id;
     @NotBlank(message = "Title is required")
     private String title;
     @NotBlank(message = "Release date is required")

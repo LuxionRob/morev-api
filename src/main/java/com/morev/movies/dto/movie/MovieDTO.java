@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 
 import java.util.List;
@@ -17,7 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 public class MovieDTO {
     @Id
-    private ObjectId id;
+    private String id;
     @NotBlank
     private String title;
     @NotBlank

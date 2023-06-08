@@ -43,7 +43,7 @@ public class UserController {
     public ResponseEntity<?> deleteUser() {
         Authentication user = SecurityContextHolder.getContext().getAuthentication();
         UserDetails principal = (UserDetails) user.getPrincipal();
-        userService.deleteUser(principal.getUsername());
+        userService.deleteUserByEmail(principal.getUsername());
         return ResponseEntity.ok("User deleted successfully");
     }
 }

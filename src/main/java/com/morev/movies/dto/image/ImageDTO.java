@@ -5,7 +5,6 @@ import com.morev.movies.utils.GlobalConstant;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.stereotype.Component;
 
@@ -15,7 +14,7 @@ import org.springframework.stereotype.Component;
 @NoArgsConstructor
 public class ImageDTO {
     @Id
-    private ObjectId id;
+    private String id;
 
     private String title;
 

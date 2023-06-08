@@ -2,7 +2,6 @@ package com.morev.movies.controller;
 
 import com.morev.movies.dto.image.ImageDTO;
 import com.morev.movies.service.image.ImageService;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -31,7 +30,7 @@ public class ImageController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<byte[]> getImage(@PathVariable ObjectId id) {
+    public ResponseEntity<byte[]> getImage(@PathVariable String id) {
         byte[] imageData = imageService.display(id);
         return ResponseEntity.status(HttpStatus.OK)
                 .contentType(MediaType.valueOf(MediaType.IMAGE_PNG_VALUE))
