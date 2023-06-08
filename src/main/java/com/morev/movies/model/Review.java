@@ -8,6 +8,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
+import java.util.List;
 
 @Document(collection = "reviews")
 @Data
@@ -16,8 +17,11 @@ import java.util.Date;
 public class Review {
     @Id
     private ObjectId id;
-    private ObjectId user_id;
+    private ObjectId userId;
+    private ObjectId movieId;
     private String content;
     private int like;
     private Date timestamp;
+    private List<ObjectId> upvotedUserIds;
+    private List<ObjectId> downvotedUserIds;
 }

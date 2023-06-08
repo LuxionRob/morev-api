@@ -2,10 +2,12 @@ package com.morev.movies.service.movie.impl;
 
 import com.morev.movies.dto.movie.MovieDTO;
 import com.morev.movies.model.Movie;
+import com.morev.movies.model.Review;
 import com.morev.movies.repository.movie.MovieRepository;
+import com.morev.movies.repository.review.ReviewRepository;
 import com.morev.movies.service.movie.MovieService;
+import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -14,14 +16,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class MovieServiceImpl implements MovieService {
 
     private final MovieRepository movieRepository;
-
-    @Autowired
-    public MovieServiceImpl(MovieRepository movieRepository) {
-        this.movieRepository = movieRepository;
-    }
+    private final ReviewRepository reviewRepository;
 
     @Override
     public List<MovieDTO> findAll() {
@@ -49,14 +48,9 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public boolean delete(ObjectId id) {
+    public void delete(ObjectId id) {
         Optional<Movie> optionalMovie = movieRepository.findById(id);
-        if (optionalMovie.isPresent()) {
-            movieRepository.delete(optionalMovie.get());
-            return true;
-        } else {
-            return false;
-        }
+        optionalMovie.ifPresent(movieRepository::delete);
     }
 
     @Override
@@ -78,6 +72,21 @@ public class MovieServiceImpl implements MovieService {
             return movieDto;
         } else {
             return null;
+        }
+    }
+
+    @Override
+    public List<Review> getAllReviews(ObjectId movieId) {
+        Optional<List<Review>> reviewIdList = reviewRepository.findAllByMovieId(movieId);
+        return reviewIdList.orElse(null);
+    }
+
+    @Override
+    public void deleteReviewInMovie(ObjectId movieId, ObjectId reviewId) {
+        Optional<Movie> movie = movieRepository.findById(movieId);
+        if (movie.isPresent()) {
+            List<Review> reviews = movie.get().getReviewIds();
+            reviews.removeIf(review -> review.getId().equals(reviewId));
         }
     }
 }

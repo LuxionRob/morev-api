@@ -5,8 +5,8 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
 import java.util.List;
 
@@ -29,7 +29,7 @@ public class Movie {
     @NotBlank(message = "Genre is required")
     private List<String> genres;
     private List<String> backdrops;
-    @DocumentReference
+    @DBRef
     private List<Review> reviewIds;
 
     public Movie(MovieDTO movieDTO) {
