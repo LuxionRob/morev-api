@@ -30,7 +30,7 @@ public class ReviewServiceImpl implements ReviewService {
     private final MovieService movieService;
 
     @Override
-    public void updateMessage(ObjectId id, String message) {
+    public void updateMessage(String id, String message) {
         Optional<Review> curReview = reviewRepository.findById(id);
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         UserDetails principal = (UserDetails) auth.getPrincipal();
@@ -46,7 +46,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public void deleteReviewById(ObjectId id) {
+    public void deleteReviewById(String id) {
         Optional<Review> curReview = reviewRepository.findById(id);
         Authentication user = SecurityContextHolder.getContext().getAuthentication();
         UserDetails principal = (UserDetails) user.getPrincipal();
@@ -60,7 +60,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public boolean postReview(ObjectId movieId, String message) {
+    public boolean postReview(String movieId, String message) {
         Optional<MovieDTO> movie = movieService.findById(movieId);
         Authentication user = SecurityContextHolder.getContext().getAuthentication();
         UserDetails principal = (UserDetails) user.getPrincipal();
@@ -69,7 +69,7 @@ public class ReviewServiceImpl implements ReviewService {
             if (auth.getEmail() != null) {
                 List<Review> reviewList = movie.get().getReviewIds();
                 Review newReview = new Review(
-                        new ObjectId(),
+                        new ObjectId().toHexString(),
                         auth.getId(),
                         movieId,
                         message,
@@ -90,7 +90,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public void upvote(ObjectId id, String action) {
+    public void upvote(String id, String action) {
         Optional<Review> review = reviewRepository.findById(id);
 
         if (review.isPresent()) {
@@ -98,9 +98,9 @@ public class ReviewServiceImpl implements ReviewService {
             UserDetails principal = (UserDetails) user.getPrincipal();
             UserDTO authenticatedUser = userService.getUserByEmail(principal.getUsername());
 
-            if (authenticatedUser.getId() != review.get().getUserId()) {
-                List<ObjectId> upvotedUserIds = review.get().getUpvotedUserIds();
-                List<ObjectId> downvotedUserIds = review.get().getDownvotedUserIds();
+            if (!authenticatedUser.getId().equals(review.get().getUserId())) {
+                List<String> upvotedUserIds = review.get().getUpvotedUserIds();
+                List<String> downvotedUserIds = review.get().getDownvotedUserIds();
 
                 boolean upvoteContain = upvotedUserIds.contains(authenticatedUser.getId());
                 boolean downvoteContain = downvotedUserIds.contains(authenticatedUser.getId());

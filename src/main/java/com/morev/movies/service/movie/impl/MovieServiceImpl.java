@@ -31,7 +31,7 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public Optional<MovieDTO> findById(ObjectId id) {
+    public Optional<MovieDTO> findById(String id) {
         Optional<Movie> movie = movieRepository.findById(id);
         if (movie.isPresent()) {
             MovieDTO dto = new MovieDTO(movie.get());
@@ -42,13 +42,13 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public MovieDTO create(@RequestBody MovieDTO movieDto) {
-        movieDto.setId(new ObjectId());
+        movieDto.setId(new ObjectId().toHexString());
         Movie newMovie = new Movie(movieDto);
         return new MovieDTO(movieRepository.save(newMovie));
     }
 
     @Override
-    public void delete(ObjectId id) {
+    public void delete(String id) {
         Optional<Movie> optionalMovie = movieRepository.findById(id);
         optionalMovie.ifPresent(movieRepository::delete);
     }
@@ -76,13 +76,13 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public List<Review> getAllReviews(ObjectId movieId) {
+    public List<Review> getAllReviews(String movieId) {
         Optional<List<Review>> reviewIdList = reviewRepository.findAllByMovieId(movieId);
         return reviewIdList.orElse(null);
     }
 
     @Override
-    public void deleteReviewInMovie(ObjectId movieId, ObjectId reviewId) {
+    public void deleteReviewInMovie(String movieId, String reviewId) {
         Optional<Movie> movie = movieRepository.findById(movieId);
         if (movie.isPresent()) {
             List<Review> reviews = movie.get().getReviewIds();

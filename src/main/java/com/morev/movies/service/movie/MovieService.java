@@ -2,18 +2,17 @@ package com.morev.movies.service.movie;
 
 import com.morev.movies.dto.movie.MovieDTO;
 import com.morev.movies.model.Review;
-import org.bson.types.ObjectId;
 
 import java.util.List;
 import java.util.Optional;
 public interface MovieService {
     List<MovieDTO> findAll();
-    Optional<MovieDTO> findById(ObjectId id);
+    Optional<MovieDTO> findById(String id);
     MovieDTO create(MovieDTO movieDto);
-    void delete(ObjectId id);
+    void delete(String id);
     MovieDTO update(MovieDTO movieDto);
 
-    List<Review> getAllReviews(ObjectId movieId);
+    List<Review> getAllReviews(String movieId);
 
-    void deleteReviewInMovie(ObjectId movieId, ObjectId reviewId);
+    void deleteReviewInMovie(String movieId, String reviewId);
 }

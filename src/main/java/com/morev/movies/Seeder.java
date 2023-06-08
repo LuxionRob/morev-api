@@ -46,7 +46,7 @@ public class Seeder implements CommandLineRunner {
     private void seedMovie() {
         if (movieRepository.count() == 0) {
             Movie movie1 = new Movie(
-                    new ObjectId(),
+                    new ObjectId().toHexString(),
                     "Avatar: The Way of Water remaster",
                     "2022-12-16",
                     "https://www.youtube.com/watch?v=d9MyW72ELq0",
@@ -68,7 +68,7 @@ public class Seeder implements CommandLineRunner {
             );
 
             Movie movie2 = new Movie(
-                    new ObjectId(),
+                    new ObjectId().toHexString(),
                     "M3GAN",
                     "2023-01-06",
                     "https://www.youtube.com/watch?v=BRb4U99OU80",
@@ -90,7 +90,7 @@ public class Seeder implements CommandLineRunner {
             );
 
             Movie movie3 = new Movie(
-                    new ObjectId(),
+                    new ObjectId().toHexString(),
                     "Troll",
                     "2022-12-01",
                     "https://www.youtube.com/watch?v=AiohkY_XQYQ",
@@ -112,7 +112,7 @@ public class Seeder implements CommandLineRunner {
             );
 
             Movie movie4 = new Movie(
-                    new ObjectId(),
+                    new ObjectId().toHexString(),
                     "Black Adam",
                     "2022-10-19",
                     "https://www.youtube.com/watch?v=JaV7mmc9HGw",
@@ -134,7 +134,7 @@ public class Seeder implements CommandLineRunner {
             );
 
             Movie movie5 = new Movie(
-                    new ObjectId(),
+                    new ObjectId().toHexString(),
                     "Avatar",
                     "2009-12-15",
                     "https://www.youtube.com/watch?v=5PSNL1qE6VY",
@@ -156,7 +156,7 @@ public class Seeder implements CommandLineRunner {
             );
 
             Movie movie6 = new Movie(
-                    new ObjectId(),
+                    new ObjectId().toHexString(),
                     "Roald Dahl's Matilda the Musical",
                     "2022-11-25",
                     "https://www.youtube.com/watch?v=lroAhsDr2vI",
@@ -178,7 +178,7 @@ public class Seeder implements CommandLineRunner {
             );
 
             Movie movie7 = new Movie(
-                    new ObjectId(),
+                    new ObjectId().toHexString(),
                     "Black Panther: Wakanda Forever",
                     "2022-11-11",
                     "https://www.youtube.com/watch?v=_Z3QKkl1WyM",
@@ -200,7 +200,7 @@ public class Seeder implements CommandLineRunner {
             );
 
             Movie movie8 = new Movie(
-                    new ObjectId(),
+                    new ObjectId().toHexString(),
                     "Strange World",
                     "2022-11-23",
                     "https://www.youtube.com/watch?v=bKh2G73gCCs",
@@ -222,7 +222,7 @@ public class Seeder implements CommandLineRunner {
             );
 
             Movie movie9 = new Movie(
-                    new ObjectId(),
+                    new ObjectId().toHexString(),
                     "The Woman King",
                     "2022-09-15",
                     "https://www.youtube.com/watch?v=3RDaPV_rJ1Y",
@@ -244,7 +244,7 @@ public class Seeder implements CommandLineRunner {
             );
 
             Movie movie10 = new Movie(
-                    new ObjectId(),
+                    new ObjectId().toHexString(),
                     "Puss in Boots",
                     "2022-12-21",
                     "",

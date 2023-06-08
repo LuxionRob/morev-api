@@ -6,7 +6,6 @@ import com.morev.movies.service.movie.MovieService;
 import com.morev.movies.service.user.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.bson.types.ObjectId;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -45,7 +44,7 @@ public class AdminController {
     @PreAuthorize("hasAuthority('admin:delete')")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public String deleteMovie(@PathVariable ObjectId id) {
+    public String deleteMovie(@PathVariable String id) {
         movieService.delete(id);
         return "Delete successfully";
     }
@@ -62,8 +61,8 @@ public class AdminController {
     @PreAuthorize("hasAuthority('admin:delete')")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public String deleteUser(@PathVariable ObjectId id) {
-        userService.deleteUser(id);
+    public String deleteUser(@PathVariable String id) {
+        userService.deleteUserById(id);
         return "Delete successfully";
     }
 
@@ -80,7 +79,7 @@ public class AdminController {
     @PreAuthorize("hasAuthority('admin:read')")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public UserDTO getUser(@PathVariable ObjectId id) {
+    public UserDTO getUser(@PathVariable String id) {
         return userService.getUserById(id);
     }
 }

@@ -6,7 +6,6 @@ import com.morev.movies.validation.password.ValidPassword;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
-import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
@@ -21,7 +20,7 @@ import java.util.Collection;
 @AllArgsConstructor
 public class User implements UserDetails {
     @Id
-    private ObjectId id;
+    private String id;
     private String displayName;
     private String fullName;
     @Email(message = "Email not valid")

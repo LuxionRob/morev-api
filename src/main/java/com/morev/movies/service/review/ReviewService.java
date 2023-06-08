@@ -1,12 +1,11 @@
 package com.morev.movies.service.review;
 
-import org.bson.types.ObjectId;
-
 public interface ReviewService {
-    void updateMessage(ObjectId id, String message);
+    void updateMessage(String id, String message);
 
-    void deleteReviewById(ObjectId id);
+    void deleteReviewById(String id);
 
-    boolean postReview(ObjectId movieId, String message);
-    void upvote(ObjectId id, String action);
+    boolean postReview(String movieId, String message);
+
+    void upvote(String id, String action);
 }

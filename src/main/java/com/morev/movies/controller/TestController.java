@@ -1,6 +1,5 @@
 package com.morev.movies.controller;
 
-import org.bson.types.ObjectId;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,8 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class TestController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public ObjectId test() {
-        ObjectId id = new ObjectId("645d97aa4682561856ea81d3");
+    public String test() {
+        String id = new String("645d97aa4682561856ea81d3");
         return id;
     }
 }

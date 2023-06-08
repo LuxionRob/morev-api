@@ -6,7 +6,6 @@ import com.morev.movies.repository.user.UserRepository;
 import com.morev.movies.service.image.ImageService;
 import com.morev.movies.service.user.UserService;
 import lombok.RequiredArgsConstructor;
-import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -20,7 +19,7 @@ public class UserServiceImpl implements UserService {
     private final ImageService imageService;
 
     @Override
-    public boolean isExisted(ObjectId id) {
+    public boolean isExisted(String id) {
         return userRepository.findById(id).isPresent();
     }
 
@@ -31,7 +30,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO getUserById(ObjectId id) {
+    public UserDTO getUserById(String id) {
         Optional<User> user = userRepository.findById(id);
         return user.map(UserDTO::new).orElse(null);
     }
@@ -47,18 +46,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUser(ObjectId id) {
+    public void deleteUserById(String id) {
         Optional<User> user = userRepository.findById(id);
         if (user.isPresent()) {
             String[] path = user.get().getAvatarUrl().split("images/");
-            ObjectId newId = new ObjectId(path[1]);
-            imageService.deleteImage(newId);
+            imageService.deleteImage(path[1]);
             user.ifPresent(userRepository::delete);
         }
     }
 
     @Override
-    public void deleteUser(String email) {
+    public void deleteUserByEmail(String email) {
         Optional<User> user = userRepository.findByEmail(email);
         user.ifPresent(userRepository::delete);
     }

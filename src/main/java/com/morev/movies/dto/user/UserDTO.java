@@ -12,7 +12,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 
 @Getter
@@ -21,7 +20,7 @@ import org.springframework.data.annotation.Id;
 @AllArgsConstructor
 public class UserDTO {
     @Id
-    private ObjectId id;
+    private String id;
     @Null(groups = OnCreate.class)
     private String displayName;
 

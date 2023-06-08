@@ -20,7 +20,7 @@ public class ImageServiceImpl implements ImageService {
     @Override
     public String uploadImage(MultipartFile file) throws IOException {
         Image image = new Image();
-        image.setId(new ObjectId());
+        image.setId(new ObjectId().toHexString());
         image.setTitle(file.getOriginalFilename());
         image.setData(file.getBytes());
 
@@ -29,7 +29,7 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public byte[] display(ObjectId id) {
+    public byte[] display(String id) {
         Optional<Image> dbImage = imageRepository.findById(id);
         return dbImage.map(Image::getData).orElse(null);
     }
@@ -43,7 +43,7 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public void deleteImage(ObjectId id) {
+    public void deleteImage(String id) {
         imageRepository.deleteById(id);
     }
 
