@@ -15,4 +15,10 @@ public interface MovieService {
     List<Review> getAllReviews(String movieId);
 
     void deleteReviewInMovie(String movieId, String reviewId);
+
+    double getRating(String id);
+
+    boolean rate(String id, int rating);
+
+    boolean changeRate(String id, int rating);
 }

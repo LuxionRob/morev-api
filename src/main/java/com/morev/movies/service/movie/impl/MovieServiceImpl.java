@@ -1,13 +1,20 @@
 package com.morev.movies.service.movie.impl;
 
 import com.morev.movies.dto.movie.MovieDTO;
+import com.morev.movies.dto.user.UserDTO;
 import com.morev.movies.model.Movie;
+import com.morev.movies.model.Rating;
 import com.morev.movies.model.Review;
 import com.morev.movies.repository.movie.MovieRepository;
+import com.morev.movies.repository.rating.RatingRepository;
 import com.morev.movies.repository.review.ReviewRepository;
 import com.morev.movies.service.movie.MovieService;
+import com.morev.movies.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -21,6 +28,8 @@ public class MovieServiceImpl implements MovieService {
 
     private final MovieRepository movieRepository;
     private final ReviewRepository reviewRepository;
+    private final RatingRepository ratingRepository;
+    private final UserService userService;
 
     @Override
     public List<MovieDTO> findAll() {
@@ -88,5 +97,55 @@ public class MovieServiceImpl implements MovieService {
             List<Review> reviews = movie.get().getReviewIds();
             reviews.removeIf(review -> review.getId().equals(reviewId));
         }
+    }
+
+    @Override
+    public double getRating(String id) {
+        Optional<List<Rating>> ratingList = ratingRepository.findAllByMovieId(id);
+        double rate = 0.0;
+        if (ratingList.isPresent()) {
+
+            for (Rating rating : ratingList.get()) {
+                rate += rating.getRating();
+            }
+
+            return rate / ratingList.get().size();
+        }
+        return 0.0;
+    }
+
+    @Override
+    public boolean rate(String id, int rating) {
+        if (rating > 5 || rating < 1) {
+            return false;
+        }
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails principal = (UserDetails) auth.getPrincipal();
+        UserDTO user = userService.getUserByEmail(principal.getUsername());
+
+        if (ratingRepository.findByUserIdAndMovieId(user.getId(), id).isEmpty()) {
+            ratingRepository.save(new Rating(new ObjectId().toHexString(), id, user.getId(), rating));
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean changeRate(String id, int rating) {
+        if (rating > 5 || rating < 1) {
+            return false;
+        }
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails principal = (UserDetails) auth.getPrincipal();
+
+        UserDTO user = userService.getUserByEmail(principal.getUsername());
+        Optional<Rating> userRating = ratingRepository.findByUserIdAndMovieId(user.getId(), id);
+
+        if (userRating.isPresent()) {
+            userRating.get().setRating(rating);
+            ratingRepository.save(userRating.get());
+            return true;
+        }
+        return false;
     }
 }
