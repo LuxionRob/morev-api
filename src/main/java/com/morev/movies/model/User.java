@@ -48,6 +48,7 @@ public class User implements UserDetails {
         this.fullName = dto.getFullName();
         this.age = dto.getAge();
         this.avatarUrl = dto.getAvatarUrl();
+        this.email = dto.getEmail();
     }
 
     public User(String fullName, String email, String password, Role role) {
