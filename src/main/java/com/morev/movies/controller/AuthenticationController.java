@@ -20,12 +20,21 @@ import java.io.UnsupportedEncodingException;
 @RequestMapping("/api/v1/auth")
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
+
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.OK)
     public AuthenticationResponse register(
             @RequestBody @Valid RegisterRequest request
     ) throws Exception {
         return authenticationService.register(request);
+    }
+
+    @PostMapping("/register/re-send")
+    @ResponseStatus(HttpStatus.OK)
+    public void resendRegisterEmail(
+            @RequestBody @Valid RegisterRequest request
+    ) throws Exception {
+        authenticationService.sendVerificationEmail(authenticationService.createUserFromRequest(request));
     }
 
     @PostMapping("/authenticate")
@@ -64,6 +73,7 @@ public class AuthenticationController {
             return "verify_fail";
         }
     }
+
     @GetMapping("/reset-password")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -71,6 +81,15 @@ public class AuthenticationController {
         authenticationService.sendForgotPasswordEmail(email);
         return "email_has_sent";
     }
+
+    @GetMapping("/reset-password/re-send")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public String reSendForgot(@Param("email") String email) throws MessagingException, UnsupportedEncodingException, AccountNotFoundException {
+        authenticationService.sendForgotPasswordEmail(email);
+        return "email_has_sent";
+    }
+
     @PostMapping("/reset-password")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
