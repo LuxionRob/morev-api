@@ -18,14 +18,14 @@ public class ImageServiceImpl implements ImageService {
     private final ImageRepository imageRepository;
 
     @Override
-    public String uploadImage(MultipartFile file) throws IOException {
+    public ImageDTO uploadImage(MultipartFile file) throws IOException {
         Image image = new Image();
         image.setId(new ObjectId().toHexString());
         image.setTitle(file.getOriginalFilename());
         image.setData(file.getBytes());
 
         imageRepository.save(image);
-        return "file uploaded successfully : " + file.getOriginalFilename();
+        return new ImageDTO(image);
     }
 
     @Override

@@ -103,7 +103,7 @@ public class MovieServiceImpl implements MovieService {
     public double getRating(String id) {
         Optional<List<Rating>> ratingList = ratingRepository.findAllByMovieId(id);
         double rate = 0.0;
-        if (ratingList.isPresent()) {
+        if (ratingList.isPresent() && ratingList.get().size() > 0) {
 
             for (Rating rating : ratingList.get()) {
                 rate += rating.getRating();
@@ -122,9 +122,11 @@ public class MovieServiceImpl implements MovieService {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         UserDetails principal = (UserDetails) auth.getPrincipal();
         UserDTO user = userService.getUserByEmail(principal.getUsername());
-
         if (ratingRepository.findByUserIdAndMovieId(user.getId(), id).isEmpty()) {
+            Optional<Movie> movie = movieRepository.findById(id);
             ratingRepository.save(new Rating(new ObjectId().toHexString(), id, user.getId(), rating));
+            movie.get().setRating(this.getRating(id));
+            movieRepository.save(movie.get());
             return true;
         }
         return false;
@@ -142,8 +144,11 @@ public class MovieServiceImpl implements MovieService {
         Optional<Rating> userRating = ratingRepository.findByUserIdAndMovieId(user.getId(), id);
 
         if (userRating.isPresent()) {
+            Optional<Movie> movie = movieRepository.findById(id);
             userRating.get().setRating(rating);
             ratingRepository.save(userRating.get());
+            movie.get().setRating(this.getRating(id));
+            movieRepository.save(movie.get());
             return true;
         }
         return false;

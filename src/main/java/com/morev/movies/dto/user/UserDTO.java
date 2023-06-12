@@ -40,6 +40,8 @@ public class UserDTO {
     @Null(groups = OnCreate.class)
     private Role role;
 
+    private boolean enabled;
+
 
     public UserDTO(User user) {
         this.id = user.getId();
@@ -49,5 +51,6 @@ public class UserDTO {
         this.avatarUrl = user.getAvatarUrl();
         this.email = user.getEmail();
         this.role = user.getRole();
+        this.enabled = user.isEnabled();
     }
 }

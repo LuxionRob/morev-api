@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 public interface ImageService {
-    String uploadImage(MultipartFile file) throws IOException, SQLException;
+    ImageDTO uploadImage(MultipartFile file) throws IOException, SQLException;
 
     byte[] display(String id);
 
