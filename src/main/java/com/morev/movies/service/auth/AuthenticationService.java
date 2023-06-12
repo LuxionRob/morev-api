@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 public interface AuthenticationService {
+    User createUserFromRequest(RegisterRequest request);
+
     AuthenticationResponse register(RegisterRequest request) throws Exception;
 
     AuthenticationResponse authenticate(AuthenticationRequest request) throws Exception;

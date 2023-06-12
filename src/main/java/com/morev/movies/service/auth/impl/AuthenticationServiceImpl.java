@@ -48,8 +48,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private String domain;
     @Value("${CLIENT_PORT}")
     private String port;
-    @Value("${API_VERSION}")
-    private String apiVersion;
 
     @Override
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
@@ -84,6 +82,20 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password incorrect.");
         }
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Account is not existed!");
+    }
+
+    @Override
+    public User createUserFromRequest(RegisterRequest request) {
+        String randomCode = this.randomString();
+
+        return User.builder()
+                .email(request.getEmail())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .fullName(request.getFullName())
+                .role(Role.USER)
+                .enabled(false)
+                .verificationCode(randomCode)
+                .build();
     }
 
     public AuthenticationResponse register(RegisterRequest request) throws MessagingException, UnsupportedEncodingException {
@@ -180,7 +192,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public void sendVerificationEmail(User user) throws MessagingException, UnsupportedEncodingException {
-        String siteURL = "http://" + domain + ":" + port + "/api/" + apiVersion + "/auth";
+        String siteURL = "http://" + domain + ":" + port + "/send-verify-code";
         String toAddress = user.getEmail();
         String fromAddress = "aidaynhi8@gmail.com";
         String senderName = "Morev Support";
@@ -250,7 +262,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         user.get().setForgotPasswordCode(code);
         userRepository.save(user.get());
 
-        String siteURL = "http://" + domain + ":" + port + "/api/" + apiVersion + "/auth";
+        String siteURL = "http://" + domain + ":" + port + "/reset-password";
         String toAddress = email;
         String fromAddress = "aidaynhi8@gmail.com";
         String senderName = "Morev Support";
