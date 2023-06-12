@@ -49,8 +49,10 @@ public class UserServiceImpl implements UserService {
     public void deleteUserById(String id) {
         Optional<User> user = userRepository.findById(id);
         if (user.isPresent()) {
-            String[] path = user.get().getAvatarUrl().split("images/");
-            imageService.deleteImage(path[1]);
+            if (user.get().getAvatarUrl() != null) {
+                String[] path = user.get().getAvatarUrl().split("images/");
+                imageService.deleteImage(path[1]);
+            }
             user.ifPresent(userRepository::delete);
         }
     }
