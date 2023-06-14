@@ -16,8 +16,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -50,7 +50,7 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public MovieDTO create(@RequestBody MovieDTO movieDto) {
+    public MovieDTO create(MovieDTO movieDto) {
         movieDto.setId(new ObjectId().toHexString());
         Movie newMovie = new Movie(movieDto);
         return new MovieDTO(movieRepository.save(newMovie));
@@ -68,9 +68,10 @@ public class MovieServiceImpl implements MovieService {
 
         if (optionalMovie.isPresent()) {
             Movie movie = optionalMovie.get();
-
+            String[] splitedDateString = movieDto.getReleaseDate().split(" ");
+            LocalDate date = LocalDate.of(Integer.parseInt(splitedDateString[0]), Integer.parseInt(splitedDateString[1]), Integer.parseInt(splitedDateString[2]));
             movie.setTitle(movieDto.getTitle());
-            movie.setReleaseDate(movieDto.getReleaseDate());
+            movie.setReleaseDate(date);
             movie.setTrailerLink(movieDto.getTrailerLink());
             movie.setPoster(movieDto.getPoster());
             movie.setGenres(movieDto.getGenres());

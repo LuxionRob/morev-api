@@ -38,9 +38,12 @@ public class Movie {
     private List<Review> reviewIds;
 
     public Movie(MovieDTO movieDTO) {
+        String[] splitedDateString = movieDTO.getReleaseDate().split(" ");
+        LocalDate date = LocalDate.of(Integer.parseInt(splitedDateString[0]), Integer.parseInt(splitedDateString[1]) + 1, Integer.parseInt(splitedDateString[2]));
+
         this.id = movieDTO.getId();
         this.title = movieDTO.getTitle();
-        this.releaseDate = movieDTO.getReleaseDate();
+        this.releaseDate = date;
         this.trailerLink = movieDTO.getTrailerLink();
         this.poster = movieDTO.getPoster();
         this.genres = movieDTO.getGenres();

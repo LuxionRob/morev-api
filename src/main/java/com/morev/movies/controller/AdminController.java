@@ -24,14 +24,14 @@ public class AdminController {
 
     @PostMapping("/movies")
     @PreAuthorize("hasAuthority('admin:create')")
-    public ResponseEntity<MovieDTO> createMovie(@RequestBody MovieDTO movieDto) {
+    public ResponseEntity<?> createMovie(@RequestBody MovieDTO movieDto) {
         MovieDTO newMovie = movieService.create(movieDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(newMovie);
     }
 
     @PutMapping("/movies")
     @PreAuthorize("hasAuthority('admin:update')")
-    public ResponseEntity<MovieDTO> updateMovie(@RequestBody MovieDTO movieDto) {
+    public ResponseEntity<MovieDTO> updateMovie(@RequestBody @Valid MovieDTO movieDto) {
         MovieDTO updatedMovie = movieService.update(movieDto);
         if (updatedMovie != null) {
             return ResponseEntity.ok(updatedMovie);

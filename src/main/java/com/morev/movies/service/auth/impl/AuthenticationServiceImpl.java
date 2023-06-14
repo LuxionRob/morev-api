@@ -214,7 +214,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         String verifyURL = siteURL + "/verify?code=" + user.getVerificationCode();
 
         content = content.replace("[[URL]]", verifyURL);
-        System.out.println("Sending");
         helper.setText(content, true);
 
         mailSender.send(message);
