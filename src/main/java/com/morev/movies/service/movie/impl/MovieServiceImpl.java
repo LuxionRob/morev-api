@@ -68,7 +68,7 @@ public class MovieServiceImpl implements MovieService {
 
         if (optionalMovie.isPresent()) {
             Movie movie = optionalMovie.get();
-            String[] splitedDateString = movieDto.getReleaseDate().split(" ");
+            String[] splitedDateString = movieDto.getReleaseDate().split("-");
             LocalDate date = LocalDate.of(Integer.parseInt(splitedDateString[0]), Integer.parseInt(splitedDateString[1]), Integer.parseInt(splitedDateString[2]));
             movie.setTitle(movieDto.getTitle());
             movie.setReleaseDate(date);

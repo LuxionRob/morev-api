@@ -38,7 +38,7 @@ public class Movie {
     private List<Review> reviewIds;
 
     public Movie(MovieDTO movieDTO) {
-        String[] splitedDateString = movieDTO.getReleaseDate().split(" ");
+        String[] splitedDateString = movieDTO.getReleaseDate().split("-");
         LocalDate date = LocalDate.of(Integer.parseInt(splitedDateString[0]), Integer.parseInt(splitedDateString[1]) + 1, Integer.parseInt(splitedDateString[2]));
 
         this.id = movieDTO.getId();
